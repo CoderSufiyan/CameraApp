@@ -30,13 +30,25 @@ navigator.mediaDevices.getUserMedia(constraints)
         // conversion of media chunks data to video
         // We can represent file type in blob
         let blob = new Blob(chunks, {type: 'video/mp4'});
-        let videoURL = URL.createObjectURL(blob);
+        // let videoURL = URL.createObjectURL(blob);
+
+        if(db){
+            let videoID = shortid();
+            let dbTransaction = db.transaction('video', 'readwrite');
+            let videoStore = dbTransaction.objectStore('video');
+            let videoEntry = {
+                id: `vid-${videoID}`,
+                blobData: blob
+            }
+            videoStore.add(videoEntry);
+        }
+
 
         // for downloading
-        let a = document.createElement('a');
-        a.href = videoURL;
-        a.download = 'video.mp4';
-        a.click();
+        // let a = document.createElement('a');
+        // a.href = videoURL;
+        // a.download = 'video.mp4';
+        // a.click();
     })
 })
 
@@ -57,24 +69,43 @@ recordBtnCont.addEventListener('click', (e)=>{
 })
 
 captureBtnCont.addEventListener('click', (e) => {
+
+    captureBtn.classList.add('scale-capture');
+
     let canvas = document.createElement('canvas');
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
-
+    
     let tool = canvas.getContext('2d');
     tool.drawImage(video, 0, 0, canvas.width, canvas.height);
     
+    let imageURL = canvas.toDataURL();
     // filtering
 
     tool.fillStyle = transparentColor;
     tool.fillRect(0, 0, canvas.width, canvas.height);
 
+    if(db){
+        let imageID = shortid();
+        let dbTransaction = db.transaction('image', 'readwrite');
+        let imageStore = dbTransaction.objectStore('image');
+        let imageEntry = {
+            id: `img-${imageID}`,
+            url: imageURL
+        }
+        imageStore.add(imageEntry);
+    }
+
+
+    setTimeout(() => {
+        captureBtn.classList.add('scale-capture');
+    }, 500);
+
     // for downloading
-    let imageURL = canvas.toDataURL();
-    let a = document.createElement('a');
-    a.href = imageURL;
-    a.download = 'image.jpg';
-    a.click();
+    // let a = document.createElement('a');
+    // a.href = imageURL;
+    // a.download = 'image.jpg';
+    // a.click();
 
 })
 

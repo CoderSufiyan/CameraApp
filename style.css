@@ -52,6 +52,8 @@ video {
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
+
 }
 
 .timer-cont {
@@ -79,6 +81,7 @@ video {
     background-repeat: no-repeat;
     background-position: center;
     background-blend-mode: color-burn;
+    cursor: pointer;
 }
 
 .orange{
@@ -113,6 +116,7 @@ video {
     bottom: 10rem;
     right: 6rem;
     z-index: 2;
+    cursor: pointer;
 }
 
 .scale-record {
